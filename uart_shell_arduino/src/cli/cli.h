@@ -1,10 +1,16 @@
 #ifndef CLI_H
 #define CLI_H
 
+// TODO: Move to config.h or similar
+#define LED_PIN 13 // Change this to your actual LED pin
+
 // cli.h
 // Initializes UART CLI — also calls Serial.begin()
 void cli_init();
 
 // Handles UART input and command dispatch — call this in loop()
 void cli_poll();
+
+int parse_args(char* args, char** argsv, int max_args);
+
 #endif

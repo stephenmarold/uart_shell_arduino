@@ -13,6 +13,10 @@ void cli_init() {
     Serial.println("UART Shell Ready");
     Serial.println("Type 'help' for commands.");
     Serial.print(">");
+
+    // TODO: Move to hardware init func once more hardware is handled. 
+    pinMode(LED_PIN, OUTPUT); // Initialize LED pin
+    digitalWrite(LED_PIN, LOW); // Ensure LED is off initially
 }
 
 void cli_poll(){
@@ -46,7 +50,7 @@ void handleCommand(char* input) {
   
   // split the input into command and arguments
   char* command = strtok(tempBuffer, " ");
-  char* args = strtok(NULL, " ");
+  char* args = strtok(NULL, "");
 
   //Debugging output
   if (!command) {
@@ -63,4 +67,25 @@ void handleCommand(char* input) {
 
   Serial.print("Unknown command: ");
   Serial.println(command);
+}
+
+int parse_args(char* args, char** argsv, int max_args){
+  int count = 0;
+
+  if (!args || strlen(args) == 0) {                     // check if args is null or empty
+    return 0;                                          // return 0 if no arguments
+  }
+
+  // tokenize the input string using space as delimiter
+  // strtok modifies the input string, so we work on a copy
+  static char tempBuffer[MAX_CMD_LENGTH];
+  strncpy(tempBuffer, args, MAX_CMD_LENGTH);
+  tempBuffer[MAX_CMD_LENGTH - 1] = '\0';                // ensure null termination
+
+  char* token = strtok(tempBuffer, " ");
+  while (token != nullptr && count < max_args) {
+    argsv[count++] = token;                            // store the argument
+    token = strtok(nullptr, " ");                      // get next argument
+  }
+  return count;                                        // return number of arguments parsed
 }
