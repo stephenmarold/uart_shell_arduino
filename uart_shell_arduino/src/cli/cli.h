@@ -10,7 +10,4 @@ void cli_init();
 
 // Handles UART input and command dispatch — call this in loop()
 void cli_poll();
-
-int parse_args(char* args, char** argsv, int max_args);
-
 #endif

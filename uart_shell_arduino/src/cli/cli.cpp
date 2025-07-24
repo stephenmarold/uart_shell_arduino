@@ -1,9 +1,8 @@
 #include "cli.h"
+#include "cli_utils.h"
 #include "commands.h"
 #include <Arduino.h>
 #include <string.h>
-
-#define MAX_CMD_LENGTH 64
 
 char inputBuffer[MAX_CMD_LENGTH]; // for storing user input
 uint8_t index = 0; // current index in inputBuffer
@@ -29,6 +28,13 @@ void cli_poll(){
       handleCommand(inputBuffer);
       index = 0;                                        // reset index for next command
       Serial.println(">");
+    }
+    else if(c == 8 || c == 127){                                          // Detect backspace and overwrite. 
+      if(index > 0){
+        index--;
+        inputBuffer[index]= '\0';
+        Serial.print("\b \b");
+      }
     }
     else if (index < MAX_CMD_LENGTH - 1) {              // prevent buffer overflow
       inputBuffer[index++] = c;                         // store character in buffer
@@ -69,23 +75,3 @@ void handleCommand(char* input) {
   Serial.println(command);
 }
 
-int parse_args(char* args, char** argsv, int max_args){
-  int count = 0;
-
-  if (!args || strlen(args) == 0) {                     // check if args is null or empty
-    return 0;                                          // return 0 if no arguments
-  }
-
-  // tokenize the input string using space as delimiter
-  // strtok modifies the input string, so we work on a copy
-  static char tempBuffer[MAX_CMD_LENGTH];
-  strncpy(tempBuffer, args, MAX_CMD_LENGTH);
-  tempBuffer[MAX_CMD_LENGTH - 1] = '\0';                // ensure null termination
-
-  char* token = strtok(tempBuffer, " ");
-  while (token != nullptr && count < max_args) {
-    argsv[count++] = token;                            // store the argument
-    token = strtok(nullptr, " ");                      // get next argument
-  }
-  return count;                                        // return number of arguments parsed
-}
