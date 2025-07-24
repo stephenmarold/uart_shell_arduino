@@ -1,6 +1,7 @@
 #include "commands.h"
 #include <Arduino.h>
 #include "cli.h"
+#include "cli_utils.h"
 
 // Add more command functions here as needed
 void cmd_help(char* args) {
@@ -88,7 +89,7 @@ void cmd_set(char* args){
   }
 
   int pin = atoi(argsv[1]);
-  if(pin > MAX_PINS || pin < 1){
+  if(!is_valid_pin(pin)){
     Serial.println("Invalid pin number. Try Again");
     return;
   }
@@ -97,15 +98,7 @@ void cmd_set(char* args){
   str_to_upper(comm);
 
   // Parse comm
-  uint8_t comm_int;
-  if(strcmp(comm, "HIGH") == 0){
-    comm_int = HIGH;
-  } else if (strcmp(comm, "LOW") == 0){
-    comm_int = LOW;
-  } else {
-    Serial.println("Must set pin high or low. Try Again");
-    return;
-  }
+  uint8_t comm_int = parse_pin_state(comm);
 
   //TODO: Refactor to configure pins with hardware, like in cli.cpp
   Serial.println("Setting PinMode to OUTPUT");
@@ -114,14 +107,6 @@ void cmd_set(char* args){
   Serial.println(comm);
   digitalWrite(pin, comm_int);
 
-}
-
-// Move to utils eventually. 
-void str_to_upper(char* str){
-  while(*str != '\0'){
-    *str = toupper((unsigned char)*str);
-    str++;
-  }
 }
 
 // command table
