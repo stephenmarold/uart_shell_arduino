@@ -1,6 +1,7 @@
 #include "cli_utils.h"
-#include <Arduino.h>
 #include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 int parse_args(char* args, char** argsv, int max_args){
   int count = 0;
@@ -16,15 +17,18 @@ int parse_args(char* args, char** argsv, int max_args){
   tempBuffer[MAX_CMD_LENGTH - 1] = '\0';                // ensure null termination
 
   char* token = strtok(tempBuffer, " ");
-  while (token != nullptr && count < max_args) {
+  while (token != NULL && count < max_args) {
     argsv[count++] = token;                            // store the argument
-    token = strtok(nullptr, " ");                      // get next argument
+    token = strtok(NULL, " ");                      // get next argument
   }
   return count;                                        // return number of arguments parsed
 }
 
 void str_to_upper(char* str){
-  while(*str != '\0'){
+  while(*str != '\0'){void serial_begin(int baudrate);
+int serial_available(void);
+char serial_read(void);
+
     *str = toupper((unsigned char)*str);
     str++;
   }
@@ -34,16 +38,16 @@ bool is_valid_pin(int pin){
     return (pin > 1 && pin <= MAX_PINS);
 }
 
-int parse_pin_state(const char* str){
-    uint8_t comm_int;
-    if(strcmp(str, "HIGH") == 0){
-        comm_int = HIGH;
-    } else if (strcmp(str, "LOW") == 0){
-        comm_int = LOW;
-    } else {
-        Serial.println("Must set pin high or low. Try Again");
-        return 0;
+bool parse_pin_state(const char* str, uint8_t* out_state) {
+    if (!str) return false;
+
+    if (strcasecmp(str, "HIGH") == 0) {
+        *out_state = HIGH;
+        return true;
+    } else if (strcasecmp(str, "LOW") == 0) {
+        *out_state = LOW;
+        return true;
     }
 
-    return comm_int;
+    return false;
 }

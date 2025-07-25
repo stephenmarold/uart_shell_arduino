@@ -1,47 +1,47 @@
 #include "cli.h"
 #include "cli_utils.h"
 #include "commands.h"
-#include <Arduino.h>
 #include <string.h>
+#include "../hardware/hardware.h"
+#include <stdint.h>
 
 char inputBuffer[MAX_CMD_LENGTH]; // for storing user input
 uint8_t index = 0; // current index in inputBuffer
 
 void cli_init() {
-    Serial.begin(9600);
-    Serial.println("UART Shell Ready");
-    Serial.println("Type 'help' for commands.");
-    Serial.print(">");
-
-    // TODO: Move to hardware init func once more hardware is handled. 
-    pinMode(LED_PIN, OUTPUT); // Initialize LED pin
-    digitalWrite(LED_PIN, LOW); // Ensure LED is off initially
+    serial_begin(9600);
+    shell_init();
+    shell_println("UART Shell Ready");
+    shell_println("Type 'help' for commands.");
+    shell_print(">");
 }
 
 void cli_poll(){
-    while(Serial.available()) {
-    char c = Serial.read();
+    while(serial_available()) {
+    char c = serial_read();
 
     if (c == '\n' || c == '\r') {
-      Serial.println();                                 // print a new line
+      shell_println("");                                 // print a new line
       inputBuffer[index] = '\0';                        // null-terminate the string
       handleCommand(inputBuffer);
       index = 0;                                        // reset index for next command
-      Serial.println(">");
+      shell_println(">");
     }
-    else if(c == 8 || c == 127){                                          // Detect backspace and overwrite. 
+    else if(c == 8 || c == 127){                        // Detect backspace and overwrite. 
       if(index > 0){
         index--;
         inputBuffer[index]= '\0';
-        Serial.print("\b \b");
+        serial_write('\b');
+        serial_write(' ');
+        serial_write('\b');
       }
     }
     else if (index < MAX_CMD_LENGTH - 1) {              // prevent buffer overflow
       inputBuffer[index++] = c;                         // store character in buffer
-      Serial.print(c);                                  // echo character back to terminal    
+      serial_write(c);                                  // echo character back to terminal    
     }
     else {
-      Serial.println("Error: Command too long");
+      shell_println("Error: Command too long");
       index = 0;                                        // reset index to avoid overflow
     }
   }
@@ -60,18 +60,18 @@ void handleCommand(char* input) {
 
   //Debugging output
   if (!command) {
-    Serial.println("No command entered.");
+    shell_println("No command entered.");
     return;
   }
 
-  for (int i = 0; commands[i].name != nullptr; i++) {
+  for (int i = 0; commands[i].name != NULL; i++) {
     if (strcmp(command, commands[i].name) == 0) {
       commands[i].function(args);                       // call the command function
       return;
     }
   }
 
-  Serial.print("Unknown command: ");
-  Serial.println(command);
+  shell_print("Unknown command: ");
+  shell_println(command);
 }
 
