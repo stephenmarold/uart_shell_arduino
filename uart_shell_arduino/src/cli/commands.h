@@ -3,11 +3,11 @@
 
 typedef void (*CommandFunction)(char* args);
 
-struct CommandEntry {
+typedef struct {
   const char* name;               // command name
   CommandFunction function;       // function to call
   const char* description;        // command description
-};
+} CommandEntry;
 
 // expose command table
 extern CommandEntry commands[];
