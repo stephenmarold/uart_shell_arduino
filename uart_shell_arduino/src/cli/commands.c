@@ -1,16 +1,15 @@
 #include "commands.h"
-#include <Arduino.h>
 #include "cli.h"
 #include "cli_utils.h"
 
 // Add more command functions here as needed
 void cmd_help(char* args) {
-  Serial.println("Available commands:");
-    for (int i = 0; commands[i].name != nullptr; i++) {
-        Serial.print(" ");
-        Serial.print(commands[i].name);
-        Serial.print(" - ");
-        Serial.println(commands[i].description);
+  shell_println("Available commands:");
+    for (int i = 0; commands[i].name != NULL; i++) {
+        shell_print(" ");
+        shell_print(commands[i].name);
+        shell_print(" - ");
+        shell_println(commands[i].description);
     }
 }
 
@@ -20,77 +19,77 @@ void cmd_status(char* args) {
     int argc = parse_args(args, argv, MAX_ARGS);
 
     if(argc > 0) {
-      Serial.println("Received arguments:");
+      shell_println("Received arguments:");
       for (int i = 0; i < argc; ++i) {
-        Serial.print("  [");
-        Serial.print(i);
-        Serial.print("]: ");
-        Serial.println(argv[i]);
+        shell_print("  [");
+        shell_print(i);
+        shell_print("]: ");
+        shell_println(argv[i]);
       } 
     } else {
-      Serial.println("No arguments specified.");
+      shell_println("No arguments specified.");
     }
   }
 }
 
 void cmd_version(char* args) {
-  Serial.println("UART Shell v0.1.0");
+  shell_println("UART Shell v0.1.0");
 }
 
 void cmd_say_hello(char* args) {
   if (args && strlen(args) > 0) {
-    Serial.print("Hello, ");
-    Serial.println(args);
+    shell_print("Hello, ");
+    shell_println(args);
   } else {
-    Serial.println("Hello, World!");
+    shell_println("Hello, World!");
   }
 }
 
 void cmd_led(char* args) {
   if(!args || strlen(args) == 0) {
-    Serial.println("Usage: led <on|off>");
+    shell_println("Usage: led <on|off>");
     return;
   }
   char* argsv[MAX_ARGS];
   int argc = parse_args(args, argsv, MAX_ARGS);
   if (argc == 0) {
-    Serial.println("Usage: led <on|off>");
+    shell_println("Usage: led <on|off>");
     return;
   }
 
   if (strcmp(args, "on") == 0) {
-    digitalWrite(LED_PIN, HIGH);
-    Serial.println("LED turned ON");
+    gpio_set(LED_PIN, HIGH);
+    shell_println("LED turned ON");
   } else if (strcmp(args, "off") == 0) {
-    digitalWrite(LED_PIN, LOW);
-    Serial.println("LED turned OFF");
+    gpio_set(LED_PIN, LOW);
+    shell_println("LED turned OFF");
   } else {
-    Serial.println("Invalid argument. Use 'on' or 'off'.");
+    shell_println("Invalid argument. Use 'on' or 'off'.");
   }
 }
 
 void cmd_set(char* args){
   if(!args || strlen(args) == 0){
-    Serial.println("Usage: <pin_num> <HIGH|LOW>");
+    shell_println("Usage: <pin_num> <HIGH|LOW>");
     return;
   }
 
   char* argsv[MAX_ARGS];
   int argc = parse_args(args, argsv, MAX_ARGS);
   if (argc != 3) {
-    Serial.println("Usage: <pin_num> <HIGH|LOW>");
+    shell_println("Usage: <pin_num> <HIGH|LOW>");
     return;
   }
 
   // Argument validation
   if(strcmp(argsv[0], "pin") != 0){
-    Serial.println("Unsupported command. Try Again");
+    shell_println("Unsupported command. Try Again");
     return;
   }
 
   int pin = atoi(argsv[1]);
   if(!is_valid_pin(pin)){
-    Serial.println("Invalid pin number. Try Again");
+    shell_println("Invalid pin number. Try Again");
     return;
   }
 
@@ -101,11 +100,11 @@ void cmd_set(char* args){
   uint8_t comm_int = parse_pin_state(comm);
 
   //TODO: Refactor to configure pins with hardware, like in cli.cpp
-  Serial.println("Setting PinMode to OUTPUT");
+  shell_println("Setting PinMode to OUTPUT");
   pinMode(pin, OUTPUT);
-  Serial.print("Setting Pin ");
-  Serial.println(comm);
-  digitalWrite(pin, comm_int);
+  shell_print("Setting Pin ");
+  shell_println(comm);
+  gpio_set(pin, comm_int);
 
 }
 
@@ -117,5 +116,5 @@ CommandEntry commands[] = {
   {"say_hello", cmd_say_hello, "Say hello to someone"},
   {"led", cmd_led, "Control the LED (on/off)"},
   {"set", cmd_set, "Set's high or low state of a pin"},
-  {nullptr, nullptr} // end marker
+  {NULL, NULL} // end marker
 };

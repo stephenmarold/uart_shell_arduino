@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "cli/cli.h"
 
 void setup() {
