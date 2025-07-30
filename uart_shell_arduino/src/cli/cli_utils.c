@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <time.h>
 
 int parse_args(char* args, char** argsv, int max_args){
   int count = 0;

@@ -55,4 +55,8 @@ void serial_write(char c) {
     Serial.write(c);
 }
 
+uint64_t get_time_ms(){
+  return (uint64_t)millis();
+}
+
 #endif
