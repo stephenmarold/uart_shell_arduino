@@ -1,14 +1,15 @@
 #include "commands.h"
 #include "cli.h"
 #include "cli_utils.h"
+#include "features/blink.h"
+#include "hardware/hardware.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "hardware/hardware.h"
 
 // Add more command functions here as needed
-void cmd_help(char* args) {
+void cmd_help() {
   shell_println("Available commands:");
     for (int i = 0; commands[i].name != NULL; i++) {
         shell_print(" ");
@@ -40,7 +41,7 @@ void cmd_status(char* args) {
   }
 }
 
-void cmd_version(char* args) {
+void cmd_version() {
   shell_println("UART Shell v0.1.0");
 }
 
@@ -115,6 +116,45 @@ void cmd_set(char* args){
 
 }
 
+void cmd_blink(char* args){
+    if(!args || strlen(args) == 0){
+    shell_println("Usage: <pin_num> <freq>");
+    return;
+  }
+
+  char* argsv[MAX_ARGS];
+  int argc = parse_args(args, argsv, MAX_ARGS);
+  if (argc != 2) {
+    shell_println("Usage: <pin_num> <freq>");
+    return;
+  }
+
+  // Argument validation
+  int pin = atoi(argsv[0]);
+  if(!is_valid_pin(pin)){
+    shell_println("Invalid pin number. Try Again");
+    return;
+  }
+
+  int freq = atoi(argsv[1]);
+  if(freq == 0){
+    shell_println("Invalid frequency number. Try Again");
+    return;
+  }
+  
+  // Start blinking
+  shell_println("Starting Blink");
+  blink_state.active = 1;
+  blink_state.pin = 13;
+  blink_state.interval_ms = 1000 / (2 * freq);
+  blink_state.last_toggle_time = get_time_ms();
+}
+
+void cmd_stop_blink(){
+  shell_print("Stopping Blink");
+  blink_state.active = 0;
+}
+
 // command table
 CommandEntry commands[] = {
   {"help", cmd_help, "List available commands"},
@@ -123,5 +163,7 @@ CommandEntry commands[] = {
   {"say_hello", cmd_say_hello, "Say hello to someone"},
   {"led", cmd_led, "Control the LED (on/off)"},
   {"set", cmd_set, "Set's high or low state of a pin"},
+  {"blink", cmd_blink, "Starts blinking the LED at [pin] [input]/sec"},
+  {"stop_blink", cmd_stop_blink, "Stops blinking the LED at [pin]"},
   {NULL, NULL} // end marker
 };
