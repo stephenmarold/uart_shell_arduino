@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
+#include "../hardware/hardware.h"
+
+bool debug_mode = false;
 
 int parse_args(char* args, char** argsv, int max_args){
   int count = 0;
@@ -51,4 +54,20 @@ bool parse_pin_state(const char* str, uint8_t* out_state) {
     }
 
     return false;
+}
+
+void shell_debug(const char* msg){
+  if(debug_mode){
+    shell_println(msg);
+  }
+}
+
+void set_debug_mode(bool enabled){
+  debug_mode = enabled;
+  if(debug_mode){
+    shell_println("[DEBUG] Debug mode enabled.");
+  } 
+  else {
+    shell_println("[DEBUG] Debug mode disabled.");
+  }
 }

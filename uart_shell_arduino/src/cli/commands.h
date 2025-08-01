@@ -21,5 +21,6 @@ void cmd_led(char* args);
 void cmd_set(char* args);
 void cmd_blink(char* args);
 void cmd_stop_blink();
+void cmd_debug(char* args);
 
 #endif
