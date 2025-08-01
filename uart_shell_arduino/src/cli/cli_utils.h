@@ -20,10 +20,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+extern bool debug_mode;
+
 int parse_args(char* args, char** argv, int max_args);
 void str_to_upper(char* str);
 bool is_valid_pin(int pin);
 bool parse_pin_state(const char* str, uint8_t* out_state);
+void shell_debug(const char* msg);
+void set_debug_mode(bool enabled);
 // bool is_number(const char* str);  // Optional for later
 
 #endif

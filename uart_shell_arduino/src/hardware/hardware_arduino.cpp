@@ -14,11 +14,6 @@ void gpio_init_output(uint8_t pin) {
 }
 
 void gpio_set(uint8_t pin, uint8_t state) {
-  // digitalWrite(pin, state);
-  Serial.print("GPIO SET: pin ");
-  Serial.print(pin);
-  Serial.print(" state: ");
-  Serial.println(state);  // should print 0 or 1
   digitalWrite(pin, state);
 }
 
