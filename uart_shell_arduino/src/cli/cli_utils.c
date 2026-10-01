@@ -1,8 +1,7 @@
 #include "cli_utils.h"
+#include <ctype.h>
 #include <string.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <time.h>
 #include "../hardware/hardware.h"
 
 bool debug_mode = false;

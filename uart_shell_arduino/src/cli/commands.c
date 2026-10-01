@@ -1,5 +1,4 @@
 #include "commands.h"
-#include "cli.h"
 #include "cli_utils.h"
 #include "features/blink.h"
 #include "hardware/hardware.h"
@@ -117,7 +116,7 @@ void cmd_set(char* args){
 }
 
 void cmd_blink(char* args){
-    if(!args || strlen(args) == 0){
+  if(!args || strlen(args) == 0){
     shell_println("Usage: <pin_num> <freq>");
     return;
   }
@@ -144,15 +143,12 @@ void cmd_blink(char* args){
   
   // Start blinking
   shell_println("Starting Blink");
-  blink_state.active = 1;
-  blink_state.pin = 13;
-  blink_state.interval_ms = (uint32_t)(1000.0 / (2.0 * freq));
-  blink_state.last_toggle_time = get_time_ms();
+  blink_start(LED_PIN, freq);
 }
 
 void cmd_stop_blink(){
   shell_print("Stopping Blink");
-  blink_state.active = 0;
+  blink_stop();
 }
 
 void cmd_debug(char* args){

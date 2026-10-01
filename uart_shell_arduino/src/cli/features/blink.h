@@ -13,4 +13,8 @@ typedef struct {
 
 extern BlinkState blink_state;
 
+void blink_start(uint8_t pin, int frequency_hz);
+void blink_stop(void);
+void blink_tick(uint32_t cur_time);
+
 #endif
