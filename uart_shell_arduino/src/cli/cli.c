@@ -21,19 +21,13 @@ void cli_init() {
 }
 
 void cli_poll(){
-    while(serial_available()) {
-      get_user_input();
+  for (unsigned int processed = 0;
+       processed < CLI_MAX_CHARS_PER_POLL && serial_available();
+       ++processed) {
+    get_user_input();
   }
 
-      // TODO: Move to a tick func after testing. 
-      if(blink_state.active) {
-        uint32_t cur_time = get_time_ms();
-        if((cur_time - blink_state.last_toggle_time) > blink_state.interval_ms){
-          blink_state.state = blink_state.state == HIGH ? LOW : HIGH;
-          blink_state.last_toggle_time = cur_time;
-          gpio_set(blink_state.pin, blink_state.state);
-        }
-      }
+  blink_tick(get_time_ms());
 }
 
 void get_user_input(){
