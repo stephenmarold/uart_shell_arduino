@@ -32,7 +32,7 @@ char serial_read(void);
 void serial_write(char c); // for low-level output (rarely needed)
 
 // utils
-uint64_t get_time_ms();
+uint32_t get_time_ms();
 
 #ifdef __cplusplus
 }

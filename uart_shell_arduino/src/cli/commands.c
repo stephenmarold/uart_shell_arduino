@@ -146,7 +146,7 @@ void cmd_blink(char* args){
   shell_println("Starting Blink");
   blink_state.active = 1;
   blink_state.pin = 13;
-  blink_state.interval_ms = (uint64_t)(1000.0 / (2.0 * freq));
+  blink_state.interval_ms = (uint32_t)(1000.0 / (2.0 * freq));
   blink_state.last_toggle_time = get_time_ms();
 }
 

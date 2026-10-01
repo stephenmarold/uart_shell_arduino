@@ -27,10 +27,8 @@ void cli_poll(){
 
       // TODO: Move to a tick func after testing. 
       if(blink_state.active) {
-        uint64_t cur_time = get_time_ms();
-        uint64_t diff = cur_time - blink_state.last_toggle_time;
+        uint32_t cur_time = get_time_ms();
         if((cur_time - blink_state.last_toggle_time) > blink_state.interval_ms){
-        shell_println('HERE');
           blink_state.state = blink_state.state == HIGH ? LOW : HIGH;
           blink_state.last_toggle_time = cur_time;
           gpio_set(blink_state.pin, blink_state.state);

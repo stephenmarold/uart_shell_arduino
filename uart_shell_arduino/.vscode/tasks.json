@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "PlatformIO",
+            "task": "Build",
+            "presentation": { "panel": "shared", "focus": true, "showReuseMessage": false }
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Upload",
+            "presentation": { "panel": "shared", "focus": true, "showReuseMessage": false }
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Monitor",
+            "presentation": { "panel": "shared", "focus": true, "showReuseMessage": false }
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Upload and Monitor",
+            "presentation": { "panel": "shared", "focus": true, "showReuseMessage": false }
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Build (uno)",
+            "presentation": { "panel": "shared", "focus": true, "showReuseMessage": false }
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Upload (uno)",
+            "presentation": { "panel": "shared", "focus": true, "showReuseMessage": false }
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Monitor (uno)",
+            "presentation": { "panel": "shared", "focus": true, "showReuseMessage": false }
+        },
+        {
+            "type": "PlatformIO",
+            "task": "Upload and Monitor (uno)",
+            "presentation": { "panel": "shared", "focus": true, "showReuseMessage": false }
+        }
+    ]
+}
