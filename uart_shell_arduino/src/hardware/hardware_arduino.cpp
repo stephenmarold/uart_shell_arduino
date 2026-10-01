@@ -14,11 +14,6 @@ void gpio_init_output(uint8_t pin) {
 }
 
 void gpio_set(uint8_t pin, uint8_t state) {
-  // digitalWrite(pin, state);
-  Serial.print("GPIO SET: pin ");
-  Serial.print(pin);
-  Serial.print(" state: ");
-  Serial.println(state);  // should print 0 or 1
   digitalWrite(pin, state);
 }
 
@@ -53,6 +48,10 @@ char serial_read(void) {
 
 void serial_write(char c) {
     Serial.write(c);
+}
+
+uint32_t get_time_ms(){
+  return (uint32_t)millis();
 }
 
 #endif
