@@ -114,7 +114,7 @@ Command names are case-sensitive. The built-in LED is pin 13; `set` accepts pins
 | `led on` / `led off` | Sets the built-in LED high or low. Does not cancel an active blink operation. |
 | `set <pin> <HIGH\|LOW>` | Configures the pin as an output and sets its level. State names are case-insensitive. |
 | `blink <pin> <frequency>` | Starts blinking at the requested frequency in complete on/off cycles per second. Currently always targets pin 13. |
-| `stop_blink` | Stops toggling and leaves the LED at its last level. |
+| `stop_blink` | Stops toggling and sets the blink pin LOW (off). |
 | `debug on` / `debug off` | Enables or disables debug output. Currently controls diagnostic messages from `set` only. Defaults to off after reset. |
 
 ### Blink example
@@ -124,7 +124,6 @@ Enter each command separately in the serial terminal:
 ```text
 blink 13 10
 stop_blink
-led off
 ```
 
 `blink 13 10` requests **10 complete flashes per second**. The interval between state changes is calculated as:
@@ -135,7 +134,7 @@ interval_ms = 1000 / (2 * frequency)
 
 At 10 Hz, this is 50 ms on and 50 ms off. Use a positive integer frequency. Timing is limited by millisecond resolution and the polling loop, so the actual rate is approximate. Only one blink operation is tracked at a time; a new `blink` command replaces its configuration.
 
-Use `stop_blink` followed by `led off` to stop blinking and ensure the LED finishes off.
+Use `stop_blink` to stop blinking and turn the LED off.
 
 ### Debug output
 

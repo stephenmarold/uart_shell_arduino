@@ -21,6 +21,8 @@ void blink_start(uint8_t pin, int frequency_hz) {
 
 void blink_stop(void) {
     blink_state.active = 0;
+    blink_state.state = 0; // LOW
+    gpio_set(blink_state.pin, blink_state.state);
 }
 
 void blink_tick(uint32_t cur_time) {
